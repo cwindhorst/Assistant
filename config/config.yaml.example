@@ -1,0 +1,41 @@
+# Example ~/.hermes/config.yaml
+#
+# This is a REFERENCE file — merge the relevant blocks into your real
+# ~/.hermes/config.yaml on the Linux machine. Do not put secrets here;
+# secrets (API keys, bot tokens) belong in ~/.hermes/.env and are referenced
+# below with ${VAR_NAME} substitution.
+
+# --- Model provider: xAI (Grok) ---
+model: xai/<grok-model-id>   # run `hermes model` to see currently supported Grok model ids
+
+providers:
+  xai:
+    api_key: ${XAI_API_KEY}
+    # request_timeout_seconds: 1800   # uncomment to override the default
+
+# --- Terminal backend ---
+# Start with "local" while trusting the agent on your own machine; move to "docker"
+# once you want shell commands sandboxed.
+terminal:
+  backend: local
+
+# --- Messaging gateway: Telegram ---
+gateway:
+  platforms:
+    telegram:
+      # bot token comes from .env as TELEGRAM_BOT_TOKEN
+      token: ${TELEGRAM_BOT_TOKEN}
+      extra:
+        status_indicator: true
+        status_online: "🟢 Online"
+        status_offline: "🔴 Offline"
+        command_menu:
+          max_commands: 60
+          priority_mode: prepend
+          priority: []
+
+# --- Updates ---
+updates:
+  pre_update_backup: true
+  backup_keep: 5
+  non_interactive_local_changes: stash
