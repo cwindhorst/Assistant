@@ -24,9 +24,12 @@ metadata:
 
 ## Procedure
 
-1. **Gather context**: pull recent messages from the relevant Telegram chat(s)/session
-   history. Respect any per-chat scope the user specifies ("just the family group", "just
-   DMs").
+1. **Gather context, bounded**: pull messages from the relevant Telegram chat(s)/session
+   history *since the last checkpoint for that chat* (see "Checkpointing" below), never the
+   full history. Respect any per-chat scope the user specifies ("just the family group",
+   "just DMs"). If no checkpoint exists yet for a chat, cap the initial pull to a sane
+   default window (last 24h, or the last ~200 messages, whichever is smaller) rather than
+   scanning everything from the beginning of the chat.
 2. **Classify each item** into:
    - **Needs a reply / action** — flag explicitly, with a one-line reason why.
    - **FYI / informational** — summarize briefly, no action needed.
@@ -39,9 +42,19 @@ metadata:
    `reminders-scheduling`), e.g. a daily 8pm "what did I miss today" job delivered to the
    user's Telegram DM.
 
+## Checkpointing (performance-critical)
+- After each digest/summary run, record a checkpoint per chat — the timestamp or message ID
+  of the last message included — in memory (e.g. `MEMORY.md` or a small per-chat state note).
+- The next run for that chat starts from the checkpoint, not from the beginning of history.
+  This keeps each run's cost roughly constant regardless of how long the chat has existed,
+  instead of growing (and slowing down) linearly with total message volume over time.
+- If a checkpoint is missing, corrupted, or clearly stale (e.g., points to a deleted message),
+  fall back to the bounded default window (last 24h / ~200 messages) rather than the full
+  history, and re-establish a fresh checkpoint.
+
 ## Good defaults for this project
-- Default scope is "since last time I asked" or "since last digest" — track what's already
-  been summarized so digests don't repeat old content.
+- Default scope is "since last checkpoint for this chat" — see Checkpointing above so digests
+  don't repeat old content and don't reprocess ever-growing history.
 - Prioritize direct messages and @-mentions over general group chatter when flagging
   "needs a reply."
 - Keep digests short — a handful of bullet points, not a transcript replay.
@@ -57,4 +70,6 @@ metadata:
 - The digest correctly excludes messages already summarized in a prior run (no repeats).
 - Anything flagged "needs a reply" is genuinely actionable — spot-check against the raw
   chat when tuning this skill early on.
+- Checkpoints are actually advancing after each run (spot-check `MEMORY.md`/state note) and a
+  fresh run on a long-lived, high-volume chat completes quickly instead of pulling full history.
 
