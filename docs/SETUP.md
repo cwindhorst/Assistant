@@ -80,6 +80,7 @@ Copy the skill folders from this repo's `skills/` directory into `~/.hermes/skil
 ```bash
 cp -r skills/reminders-scheduling ~/.hermes/skills/
 cp -r skills/message-management ~/.hermes/skills/
+cp -r skills/web-research ~/.hermes/skills/
 ```
 
 Then in a chat with the agent, ask it to review and start using them — Hermes' skill system
