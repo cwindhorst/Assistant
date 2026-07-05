@@ -48,6 +48,14 @@ the Linux box; this repo tracks the plan and holds reference config/skill files 
 - Validate with a few real conversations/group chats over a couple of days; refine the skill
   based on what the agent gets wrong.
 
+## Phase 4b — Web research
+- Define the **web-research** skill (see
+  [`skills/web-research/SKILL.md`](skills/web-research/SKILL.md)) so the agent can look
+  things up on demand: current Grok model ids, documentation, prices, news, etc.
+- Validate: ask "what's the latest stable Grok model id?" and confirm the agent fetches and
+  cites a real source rather than hallucinating a stale value.
+- Copy the skill into `~/.hermes/skills/web-research/` the same way as the Phase 3/4 skills.
+
 ## Phase 5 — Memory & personalization
 - Fill in `SOUL.md` with the assistant's identity/tone.
 - Let `USER.md` / `MEMORY.md` accumulate naturally; periodically review what the agent has
