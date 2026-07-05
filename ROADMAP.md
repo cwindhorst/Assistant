@@ -23,13 +23,13 @@ the Linux box; this repo tracks the plan and holds reference config/skill files 
 
 ## Phase 2 — Telegram gateway
 - Create a bot via **@BotFather** (`/newbot`), grab the bot token.
-- Put the token in `.env` as `TELEGRAM_BOT_TOKEN`.
-- Add the `gateway.platforms.telegram` block to `config.yaml` (see example file).
+- Run `hermes gateway setup` (interactive wizard — prompts for the token, writes it to
+  `.env`) or wire it by hand using the `platforms.telegram` block in
+  [`config/config.yaml.example`](config/config.yaml.example).
 - **Turn off privacy mode** in BotFather (`/mybots` → Bot Settings → Group Privacy) if the
   bot needs to see all messages in a group, not just `/commands` — for personal DM use this
   isn't necessary.
-- Start the gateway (`hermes gateway start` or platform-appropriate command) and confirm you
-  can chat with the bot from your phone.
+- Start the gateway (`hermes gateway`) and confirm you can chat with the bot from your phone.
 - Optionally enable `status_indicator` so the bot's profile shows Online/Offline.
 
 ## Phase 3 — Reminders & scheduling (first "useful" milestone)

@@ -45,21 +45,26 @@ Reference: [`config/config.yaml.example`](../config/config.yaml.example),
 1. In Telegram, message **@BotFather** → `/newbot`.
 2. Choose a display name and a username ending in `bot`.
 3. Copy the API token BotFather gives you.
-4. Store it as a secret:
+4. Run the interactive wizard — this is the easiest path, it prompts for the token and
+   writes it to `~/.hermes/.env` for you:
+   ```bash
+   hermes gateway setup
+   ```
+   Prefer to wire it by hand instead? Store the token as a secret and merge the
+   `platforms.telegram` block from
+   [`config/config.yaml.example`](../config/config.yaml.example) into
+   `~/.hermes/config.yaml`:
    ```bash
    hermes config set TELEGRAM_BOT_TOKEN 123456789:ABC...
    ```
 5. (Optional, group use only) Message @BotFather → `/mybots` → your bot → **Bot Settings →
    Group Privacy → Turn off**, then remove/re-add the bot to any group so it can see all
    messages, not just `/commands`.
-6. Merge the `gateway.platforms.telegram` block from
-   [`config/config.yaml.example`](../config/config.yaml.example) into
-   `~/.hermes/config.yaml`.
 
 ## 4. Start the gateway and verify
 
 ```bash
-hermes gateway start
+hermes gateway
 ```
 
 Message your bot from Telegram. Confirm:
@@ -83,8 +88,8 @@ is designed for the agent to read `SKILL.md` on demand, not for you to hand-run 
 ## 6. Validate the first two use cases
 
 - **Reminders**: "Every morning at 8am, remind me to check my calendar." Confirm the job is
-  created (`/cron list` or ask the agent) and fires on schedule, delivering to the same
-  Telegram chat.
+  created (`hermes cron list`, or `/cron list` in chat) and fires on schedule, delivering to
+  the same Telegram chat.
 - **Message management**: Have a few real conversations/group chats over a day or two, then
   ask for a daily digest or "what did I miss today?" and check the summary quality.
 

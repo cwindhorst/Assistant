@@ -6,33 +6,34 @@
 # below with ${VAR_NAME} substitution.
 
 # --- Model provider: xAI (Grok) ---
-model: xai/<grok-model-id>   # run `hermes model` to see currently supported Grok model ids
-
-providers:
-  xai:
-    api_key: ${XAI_API_KEY}
-    # request_timeout_seconds: 1800   # uncomment to override the default
+# XAI_API_KEY lives in .env and is auto-detected; provider/model go here.
+# Run `hermes model` to pick interactively and see currently supported Grok model ids.
+model:
+  default: "xai/<grok-model-id>"
+  provider: "xai"
 
 # --- Terminal backend ---
 # Start with "local" while trusting the agent on your own machine; move to "docker"
-# once you want shell commands sandboxed.
+# once you want shell commands sandboxed (hermes config set terminal.backend docker).
 terminal:
-  backend: local
+  backend: "local"
 
 # --- Messaging gateway: Telegram ---
-gateway:
-  platforms:
-    telegram:
-      # bot token comes from .env as TELEGRAM_BOT_TOKEN
-      token: ${TELEGRAM_BOT_TOKEN}
-      extra:
-        status_indicator: true
-        status_online: "🟢 Online"
-        status_offline: "🔴 Offline"
-        command_menu:
-          max_commands: 60
-          priority_mode: prepend
-          priority: []
+# Prefer `hermes gateway setup` (interactive wizard) over hand-editing this block —
+# it prompts for the bot token and writes it to .env for you. This is the reference
+# form of what that wizard produces.
+platforms:
+  telegram:
+    enabled: true
+    # token comes from TELEGRAM_BOT_TOKEN in .env — do not hardcode it here
+    extra:
+      status_indicator: true
+      status_online: "🟢 Online"
+      status_offline: "🔴 Offline"
+      command_menu:
+        max_commands: 60
+        priority_mode: prepend
+        priority: []
 
 # --- Updates ---
 updates:

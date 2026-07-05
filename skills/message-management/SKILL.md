@@ -5,18 +5,24 @@ description: >
   chatter so the user doesn't have to read everything themselves. Use this skill when the
   user asks for a summary/digest of recent messages, asks "what did I miss", wants help
   drafting a reply, or wants ongoing conversations tracked and flagged for follow-up.
+version: 1.0.0
+metadata:
+  hermes:
+    tags: [telegram, messaging, triage]
+    category: assistant
+    fallback_for_toolsets: [messaging]
 ---
 
 # Message Management
 
-## When to use this skill
+## When to Use
 - User asks "what did I miss?" / "summarize my messages" / "any important messages today?"
 - User wants a recurring daily/weekly digest (pair with the `reminders-scheduling` skill and
   a cron job that attaches this skill).
 - User wants help triaging a busy group chat — what's actionable vs. noise.
 - User wants a draft reply to a message/thread.
 
-## How to do it
+## Procedure
 
 1. **Gather context**: pull recent messages from the relevant Telegram chat(s)/session
    history. Respect any per-chat scope the user specifies ("just the family group", "just
@@ -40,9 +46,15 @@ description: >
   "needs a reply."
 - Keep digests short — a handful of bullet points, not a transcript replay.
 
-## Things to avoid
+## Pitfalls
 - Don't send replies or take actions in chats without explicit user confirmation.
 - Don't include sensitive message content in logs/cron output beyond what's needed for the
   summary.
 - Don't over-summarize a single important message down to nothing — if something is truly
   time-sensitive, say so plainly instead of burying it in a bullet list.
+
+## Verification
+- The digest correctly excludes messages already summarized in a prior run (no repeats).
+- Anything flagged "needs a reply" is genuinely actionable — spot-check against the raw
+  chat when tuning this skill early on.
+

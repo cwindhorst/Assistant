@@ -5,18 +5,24 @@ description: >
   tasks via Hermes' built-in cronjob tool, delivered to the user on Telegram. Use this
   skill whenever the user asks to be reminded of something, wants a recurring check-in,
   or asks what reminders/jobs currently exist.
+version: 1.0.0
+metadata:
+  hermes:
+    tags: [cron, telegram, reminders]
+    category: assistant
+    requires_toolsets: [cronjob]
 ---
 
 # Reminders & Scheduling
 
-## When to use this skill
+## When to Use
 - The user asks to be reminded of something ("remind me to...", "every morning at 8am...").
 - The user wants a recurring automated check (e.g., "check the weather every morning and
   tell me if I need an umbrella").
 - The user asks what reminders/cron jobs are currently active, or wants to pause/edit/remove
   one.
 
-## How to do it
+## Procedure
 
 Use the built-in `cronjob` tool — do not build a separate reminders system.
 
@@ -46,10 +52,17 @@ Use the built-in `cronjob` tool — do not build a separate reminders system.
 - When in doubt about ambiguous timing ("remind me later"), ask a clarifying follow-up
   instead of guessing an exact time.
 
-## Things to avoid
+## Pitfalls
 - Don't create a job without confirming the schedule and delivery target with the user first
   if the request is ambiguous.
 - Don't silently let a job keep running on a stale pinned model after the user changes their
   global default — flag it and offer to update the pin.
-- Don't stack duplicate reminders for the same request; check existing jobs first if the
-  request might already be covered.
+- Don't stack duplicate reminders for the same request; check existing jobs first (`cronjob
+  action="list"` / `hermes cron list`) if the request might already be covered.
+
+## Verification
+- `hermes cron list` (or `cronjob action="list"`) shows the new job with the expected
+  schedule and next-run time.
+- The reminder actually fires and is delivered to the correct Telegram chat at the expected
+  time — spot-check the first occurrence of any new recurring job.
+
